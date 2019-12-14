@@ -1,0 +1,9 @@
+[package]
+name = "rand-crack"
+version = "0.1.0"
+authors = ["koba-e964 <3303362+koba-e964@users.noreply.github.com>"]
+edition = "2018"
+
+[dependencies]
+rand_core = "0.5"
+rand_pcg = "0.2"
