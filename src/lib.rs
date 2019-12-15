@@ -4,6 +4,8 @@ extern crate rand_pcg;
 use rand_core::RngCore;
 use rand_pcg::Pcg32;
 
+pub mod lcg;
+
 #[derive(Debug, Clone)]
 pub enum Error {
     InsufficientStream,
