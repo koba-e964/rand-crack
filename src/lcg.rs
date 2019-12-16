@@ -37,7 +37,19 @@ pub fn crack_lcg(stream: &[u32]) -> Result<Vec<u64>> {
     let ls = find_l((diff >> 32) as u32);
     let mut cand = vec![];
     for l in ls {
-        cand.push((stream[0] as u64) << 32 | l as u64)
+        let state = (stream[0] as u64) << 32 | l as u64;
+        let mut lcg = LCG::new(state);
+        // Check if the generated stream matches the given one
+        let mut matches = true;
+        for &value in stream {
+            if lcg.next_u32() != value {
+                matches = false;
+                break;
+            }
+        }
+        if matches {
+            cand.push(state);
+        }
     }
     Ok(cand)
 }
@@ -46,15 +58,18 @@ fn find_l(diff: u32) -> Vec<u32> {
     let mut cand = Vec::new();
     let diff = diff as u64;
     // Baby-step giant-step
-    // diff * 2^32 <= (big << 16 + small) * mult < (diff + 1) * 2^32 is equivalent to
-    // -small * mult <= big << 16 * mult - diff * 2^32 < -small * mult + 2^32.
+    // diff * 2^32 <= (big << 16 + small) * mult + increment < (diff + 1) * 2^32 is equivalent to
+    // -small * mult <= big << 16 * mult - diff * 2^32 + increment < -small * mult + 2^32.
     // Therefore, first we store all the possibilities of big << 16 * mult - diff,
     // second we calculate the range [-small * mult, -small * mult + 2^32)
     // and check if any numbers above are contained in this interval.
     let mut giant = BTreeSet::new();
     for i in 0..1u64 << 16 {
         giant.insert((
-            (i << 16).wrapping_mul(MULTIPLIER).wrapping_sub(diff << 32),
+            (i << 16)
+                .wrapping_mul(MULTIPLIER)
+                .wrapping_sub(diff << 32)
+                .wrapping_add(INCREMENT),
             i << 16,
         ));
     }
