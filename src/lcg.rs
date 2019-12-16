@@ -3,8 +3,7 @@ use std::collections::BTreeSet;
 use crate::Error;
 use crate::Result;
 
-const MULTIPLIER: u64 = 6364136223846793005;
-const MULTIPLIER_INV: u64 = 13877824140714322085;
+const MULTIPLIER: u64 = 6_364_136_223_846_793_005;
 
 const INCREMENT: u64 = 1;
 
@@ -77,7 +76,7 @@ fn find_l(diff: u32) -> Vec<u32> {
     for small in 0..1u64 << 16 {
         let lo = small.wrapping_neg().wrapping_mul(MULTIPLIER);
         let hi = lo.wrapping_add(1u64 << 32);
-        for (value, big) in giant.range((lo, 0)..(hi, 0)) {
+        for (_value, big) in giant.range((lo, 0)..(hi, 0)) {
             cand.push((big | small) as u32);
         }
     }

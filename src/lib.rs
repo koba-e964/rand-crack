@@ -56,15 +56,15 @@ fn recover_original_state(value: u32, rot: u32, lower: u32) -> u64 {
     let state = state ^ state >> 36;
     let state = state << 27 | lower as u64;
 
-    if cfg!(debug_assertions) || true {
+    if cfg!(debug_assertions) {
         verify_original_state(value, rot, state);
     }
     state
 }
 
 #[allow(unused)]
-const MULTIPLIER: u64 = 6364136223846793005; // used by tests
-const MULTIPLIER_INV: u64 = 13877824140714322085;
+const MULTIPLIER: u64 = 6_364_136_223_846_793_005; // used by tests
+const MULTIPLIER_INV: u64 = 13_877_824_140_714_322_085;
 
 fn verify_original_state(value: u32, rot: u32, state: u64) {
     // Excerpt from the original code.
@@ -86,7 +86,7 @@ mod tests {
     fn recover_original_state_works() {
         let state = recover_original_state(127, 14, 0x1553a);
         verify_original_state(127, 14, state);
-        let state = recover_original_state(0x3a2b112, 14, 0x1553a);
-        verify_original_state(0x3a2b112, 14, state);
+        let state = recover_original_state(0x03a2_b112, 14, 0x1553a);
+        verify_original_state(0x03a2_b112, 14, state);
     }
 }
