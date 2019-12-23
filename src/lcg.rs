@@ -1,7 +1,6 @@
 use std::collections::BTreeSet;
 
-use crate::Error;
-use crate::Result;
+use crate::error::{Error, Result};
 
 const MULTIPLIER: u64 = 6_364_136_223_846_793_005;
 

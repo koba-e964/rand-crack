@@ -5,7 +5,7 @@ extern crate rand_pcg;
 use rand_core::RngCore;
 use rand_pcg::Lcg64Xsh32;
 
-use rand_crack::crack_pcg32;
+use rand_crack::pcg32;
 
 fn main() {
     let mut rng = Lcg64Xsh32::new(0, 1);
@@ -14,6 +14,6 @@ fn main() {
         *item = rng.next_u32();
         eprintln!("{}", item);
     }
-    let cand = crack_pcg32(&stream);
+    let cand = pcg32::crack(&stream);
     eprintln!("candidates = {:?}", cand);
 }
