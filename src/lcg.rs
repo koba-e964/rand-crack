@@ -6,15 +6,25 @@ const MULTIPLIER: u64 = 6_364_136_223_846_793_005;
 
 const INCREMENT: u64 = 1;
 
-/// Simplified LCG with 64-bit internal state and 32-bit outputs.
+/// A simplified LCG with 64-bit internal state and 32-bit outputs.
+///
+/// State transition is described by the following recurrence relation:
+///
+/// s_{n + 1} := s_n * MULTIPLIER + 1
+/// where MULTIPLIER := 6_364_136_223_846_793_005
+///
+/// In each call, only the highest 32 bits are exposed.
+/// This generator has the period of 2^64.
 pub struct LCG {
     state: u64,
 }
 
 impl LCG {
+    /// Initialize the state with the given input `state`.
     pub fn new(state: u64) -> Self {
         Self { state }
     }
+    /// Generate a `u32` from the state and advance the state by one step.
     pub fn next_u32(&mut self) -> u32 {
         let state = self.state;
         self.next();
@@ -25,6 +35,10 @@ impl LCG {
     }
 }
 
+/// Try to find possible initial states from the given input stream.
+/// This is done by the baby-step giant-step algorithm.
+///
+/// Complexity: O(2^16 * stream.len() * |candidates|)
 pub fn crack_lcg(stream: &[u32]) -> Result<Vec<u64>> {
     if stream.len() < 2 {
         return Err(Error::InsufficientStream);
